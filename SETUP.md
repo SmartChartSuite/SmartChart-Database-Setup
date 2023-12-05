@@ -13,13 +13,12 @@ These instructions are given generically in their simplest form, without additio
 
 Setup PostgreSQL according to the instructions for your Operating System.
 
-
 ## Locate the pg_hba.conf File
 
 The first thing that you should do is note the location of the `pg_hba.conf` file being used by your postgre service. This can be done by logging in to PSQL and running a command.
 
 1. Using the CLI, login to the postgres server as the administrative superuser user (e.g., postgres). For example, as a sudo account on a linux machine, you may use `sudo -u postgres psql`.
-2. Run the command `SHOW hba_file.conf`.
+2. Run the command `SHOW hba_file;`.
 3. This should output a path on the host machine of the `pg_hba.conf` file in use. For example `/etc/postgresql/14/main/pg_hba.conf`. Note the location of this file, as you will have to make minor edits to it later to align with user settings.
 
 ## Creating a Service Account
@@ -38,8 +37,6 @@ Here is a sample of what this might look like for host (e.g. localhost) connecti
 host    all             scuser          127.0.0.1/32            scram-sha-256
 ```
 These should never replace existing lines, only be added to the end of the file. After saving and exiting, restart the postgres service.
-
-or execute "SELECT pg_reload_conf()".
 
 # Tables and Schema by SCS Component
 ## Creating Databases

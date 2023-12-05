@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "SmartChart Suite Database Builder"
+version = "0.1.0"
+description = ""
+authors = ["Elizabeth Shivers <Elizabeth.Shivers@gtri.gatech.edu>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.scripts]
+start = ""
+
+[tool.poetry.dependencies]
+python = "^3.11"
+SQLAlchemy = "2.0.19"
+psycopg2-binary = "2.9.6"
+PyJWT = "2.8.0"
+python-multipart = "0.0.6"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
