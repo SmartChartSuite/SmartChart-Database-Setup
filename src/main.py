@@ -1,5 +1,7 @@
-from src.utils.database import create_connection
 import argparse
+from src.dbmodels.omop54 import Base as omop54
+from src.dbmodels.claritynlp import Base as claritynlp
+from utils.builder import buildTablesInSchema
 
 parser = argparse.ArgumentParser(
                     prog='SmartChart Suite Database Builder',
@@ -10,9 +12,11 @@ parser.add_argument('conn_string')
 
 def build_vocab_schema(conn_string: str):
     print("Building Vocab Schema")
-    print(conn_string)
-    create_connection(conn_string)
+    buildTablesInSchema(conn_string, omop54.metadata, "vocab")
 
+def build_claritynlp_schema(conn_string: str):
+    print("Building ClarityNLP")
+    buildTablesInSchema(conn_string, claritynlp.metadata, "nlp")
 
 if __name__ == '__main__':
     args = parser.parse_args()
