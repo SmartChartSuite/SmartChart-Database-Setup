@@ -1,4 +1,27 @@
 # Athena Vocabulary
+
+## Loading from CSV to the Database
+
+This example is given while in the PSQL terminal with a user that has permissions to access a given file. For example, running `psql` as a given user (aligned both with linux and postgres) with the CSVs in a sub folder folder of that user's home (`~/`) directory.
+
+Once logged into PSQL, switch to the appropriate database (typically `registry`). As these should be loaded in the OMOP 5.4 tables in the `vocab` schema, run the following to ensure that postgres looks in the right place:
+```
+SET search_path TO vocab;
+```
+After, you may execute the following commands, either one at a time or all together to load the files. (Adjusting the folder as needed.)
+```
+\COPY DRUG_STRENGTH FROM '~/VOCAB/DRUG_STRENGTH.csv' WITH DELIMITER E'\t' CSV HEADER QUOTE E'\b';
+\COPY CONCEPT FROM '~/VOCAB/CONCEPT.csv' WITH DELIMITER E'\t' CSV HEADER QUOTE E'\b' ;
+\COPY CONCEPT_RELATIONSHIP FROM '~/VOCAB/CONCEPT_RELATIONSHIP.csv' WITH DELIMITER E'\t' CSV HEADER QUOTE E'\b' ;
+\COPY CONCEPT_ANCESTOR FROM '~/VOCAB/CONCEPT_ANCESTOR.csv' WITH DELIMITER E'\t' CSV HEADER QUOTE E'\b' ;
+\COPY CONCEPT_SYNONYM FROM '~/VOCAB/CONCEPT_SYNONYM.csv' WITH DELIMITER E'\t' CSV HEADER QUOTE E'\b' ;
+\COPY VOCABULARY FROM '~/VOCAB/VOCABULARY.csv' WITH DELIMITER E'\t' CSV HEADER QUOTE E'\b' ;
+\COPY RELATIONSHIP FROM '~/VOCAB/RELATIONSHIP.csv' WITH DELIMITER E'\t' CSV HEADER QUOTE E'\b' ;
+\COPY CONCEPT_CLASS FROM '~/VOCAB/CONCEPT_CLASS.csv' WITH DELIMITER E'\t' CSV HEADER QUOTE E'\b' ;
+\COPY DOMAIN FROM '~/VOCAB/DOMAIN.csv' WITH DELIMITER E'\t' CSV HEADER QUOTE E'\b' ;
+```
+
+## Vocabularies
 <table>
 <tbody>
 <tr>
