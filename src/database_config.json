@@ -1,0 +1,18 @@
+{
+    "database_server_base": {
+        "host": "localhost",
+        "port": "5432",
+        "username": "",
+        "password": ""
+    },
+    "databases": [
+        {
+            "database_name": "claritynlp",
+            "schemas": ["claritynlp"]
+        },
+        {
+            "database_name": "registry",
+            "schemas": ["vocab", "viewer", "_syphilis", "_scd"]
+        }
+    ]
+}

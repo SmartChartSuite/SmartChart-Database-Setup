@@ -2,11 +2,19 @@
 
 **THIS REPOSITORY IS CURRENTLY A WORK IN PROGRESS, INTENDED TO REPLACE https://github.com/SmartChartSuite/Registry-Database**
 
-For DDL based setup instructions, please see the `SETUP.md` file. For versioning, please see `VERSIONS.md`.
+For DDL based setup instructions, please see the `SETUP.md` file. For versioning, please see `VERSIONS.md`. For the list of Athena Vocabulary that is needed to build the OMOP Concept table, please see `ATHENA.md`.
 
 # Using the Database Build Script
 
-The Database Builder helps to manage SmartChart Suite databases, creating new schemas/tables to allow for easy expansion into new registries or environments. Right now it is a work in progress and considered a pre-release state.
+The Database Builder helps to manage SmartChart Suite databases, creating new schemas/tables to allow for easy expansion into new registries or environments. **Right now it is a work in progress and considered a pre-release state.**
+
+## Known Gaps
+* Registry Manager individual condition schemas not yet implemented.
+* Has not been tested with service users to ensure ownership of databases.
+* Needs additional handling for loading Athena Vocabulary and potentialy breaking down the models to speed up loading.
+    * Note: Manually building the vocab schema and loading vocabulary from Athena CSVs prior to adding constraints will be much faster until this is resolved. Other schemas are not impacted by this.
+
+## Poetry
 
 For dependency management, the script uses Poetry for Python. Please follow installation instructions for Poetry for your OS.
 
