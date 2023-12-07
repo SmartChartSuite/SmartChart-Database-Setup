@@ -39,6 +39,8 @@ host    all             scuser          127.0.0.1/32            scram-sha-256
 These should never replace existing lines, only be added to the end of the file. After saving and exiting, restart the postgres service.
 
 # Tables and Schema by SCS Component
+**Note: For the following steps, you may also use the Database Builder script. Please see the `README.md` file for more information.**
+
 ## Creating Databases
 There are 3 databases that must be created:
 * claritynlp
