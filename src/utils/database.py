@@ -1,3 +1,4 @@
+import sys
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.engine import Connection
@@ -16,4 +17,5 @@ def create_connection(db_conn_string: str, return_engine: bool = False) -> Engin
             print(connection)
             return connection
     except OperationalError as e:
+        print(str(e), file=sys.stderr)
         return str(e)

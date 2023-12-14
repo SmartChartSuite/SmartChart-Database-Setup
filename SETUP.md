@@ -65,6 +65,11 @@ CQF Ruler will automatically build its own database so no action needs to be tak
 
 **TODO: Write up instructions.**
 
+# Upgrading an Existing Database
+
+**TODO: Complete instructions and setup pattern.**
+Use the ONLY_FOR_EXISTING_SCHEMA scripts to update.
+
 # Postgres Cheat Sheet
 `sudo -u postgres psql` - From bash shell, log in to psql as the postgres admin user (or any other).
 `\c name` - Change current database.

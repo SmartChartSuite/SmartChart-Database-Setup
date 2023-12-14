@@ -9,8 +9,9 @@ For DDL based setup instructions, please see the `SETUP.md` file. For versioning
 The Database Builder helps to manage SmartChart Suite databases, creating new schemas/tables to allow for easy expansion into new registries or environments. **Right now it is a work in progress and considered a pre-release state.**
 
 ## Known Gaps
-* Registry Manager individual condition schemas not yet implemented.
-* Has not been tested with service users to ensure ownership of databases.
+* Has not been tested with service user accounts to ensure proper ownership of databases.
+* Registry schema in SQLAlchemy builds views as tables as views are not supported out of the box. Manual running of those two SQL
+scripts may be required in the short term.
 * Needs additional handling for loading Athena Vocabulary and potentialy breaking down the models to speed up loading.
     * Note: Manually building the vocab schema and loading vocabulary from Athena CSVs prior to adding constraints will be much faster until this is resolved. Other schemas are not impacted by this.
 

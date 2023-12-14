@@ -4,6 +4,10 @@ from sqlalchemy import DateTime, Index, Integer, JSON, PrimaryKeyConstraint, Str
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 import datetime
 
+'''
+Models match Viewer 1.1.1 scripts.
+'''
+
 class Base(DeclarativeBase):
     pass
 
@@ -34,7 +38,7 @@ class Category(Base):
 
     concept_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     section: Mapped[Optional[str]] = mapped_column(String(30))
-    category: Mapped[Optional[str]] = mapped_column(String(30))
+    category: Mapped[Optional[str]] = mapped_column(String(255))
     question: Mapped[Optional[str]] = mapped_column(String(255))
 
 

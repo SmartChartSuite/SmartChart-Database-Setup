@@ -20,23 +20,23 @@ t_cohort = Table(
     Column('subject_id', Integer, nullable=False),
     Column('cohort_start_date', Date, nullable=False),
     Column('cohort_end_date', Date, nullable=False),
-    
+    schema='vocab'
 )
 
 
 class Concept(Base):
     __tablename__ = 'concept'
     __table_args__ = (
-        ForeignKeyConstraint(['concept_class_id'], ['concept_class.concept_class_id'], name='fpk_concept_concept_class_id'),
-        ForeignKeyConstraint(['domain_id'], ['domain.domain_id'], name='fpk_concept_domain_id'),
-        ForeignKeyConstraint(['vocabulary_id'], ['vocabulary.vocabulary_id'], name='fpk_concept_vocabulary_id'),
+        ForeignKeyConstraint(['concept_class_id'], ['vocab.concept_class.concept_class_id'], name='fpk_concept_concept_class_id'),
+        ForeignKeyConstraint(['domain_id'], ['vocab.domain.domain_id'], name='fpk_concept_domain_id'),
+        ForeignKeyConstraint(['vocabulary_id'], ['vocab.vocabulary.vocabulary_id'], name='fpk_concept_vocabulary_id'),
         PrimaryKeyConstraint('concept_id', name='xpk_concept'),
         Index('idx_concept_class_id', 'concept_class_id'),
         Index('idx_concept_code', 'concept_code'),
         Index('idx_concept_concept_id', 'concept_id'),
         Index('idx_concept_domain_id', 'domain_id'),
         Index('idx_concept_vocabluary_id', 'vocabulary_id'),
-        
+        {'schema': 'vocab'}
     )
 
     concept_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -153,10 +153,10 @@ class Concept(Base):
 class ConceptClass(Base):
     __tablename__ = 'concept_class'
     __table_args__ = (
-        ForeignKeyConstraint(['concept_class_concept_id'], ['concept.concept_id'], name='fpk_concept_class_concept_class_concept_id'),
+        ForeignKeyConstraint(['concept_class_concept_id'], ['vocab.concept.concept_id'], name='fpk_concept_class_concept_class_concept_id'),
         PrimaryKeyConstraint('concept_class_id', name='xpk_concept_class'),
         Index('idx_concept_class_class_id', 'concept_class_id'),
-        
+        {'schema': 'vocab'}
     )
 
     concept_class_id: Mapped[str] = mapped_column(String(20), primary_key=True)
@@ -170,10 +170,10 @@ class ConceptClass(Base):
 class Domain(Base):
     __tablename__ = 'domain'
     __table_args__ = (
-        ForeignKeyConstraint(['domain_concept_id'], ['concept.concept_id'], name='fpk_domain_domain_concept_id'),
+        ForeignKeyConstraint(['domain_concept_id'], ['vocab.concept.concept_id'], name='fpk_domain_domain_concept_id'),
         PrimaryKeyConstraint('domain_id', name='xpk_domain'),
         Index('idx_domain_domain_id', 'domain_id'),
-        
+        {'schema': 'vocab'}
     )
 
     domain_id: Mapped[str] = mapped_column(String(20), primary_key=True)
@@ -188,10 +188,10 @@ class Domain(Base):
 class Vocabulary(Base):
     __tablename__ = 'vocabulary'
     __table_args__ = (
-        ForeignKeyConstraint(['vocabulary_concept_id'], ['concept.concept_id'], name='fpk_vocabulary_vocabulary_concept_id'),
+        ForeignKeyConstraint(['vocabulary_concept_id'], ['vocab.concept.concept_id'], name='fpk_vocabulary_vocabulary_concept_id'),
         PrimaryKeyConstraint('vocabulary_id', name='xpk_vocabulary'),
         Index('idx_vocabulary_vocabulary_id', 'vocabulary_id'),
-        
+        {'schema': 'vocab'}
     )
 
     vocabulary_id: Mapped[str] = mapped_column(String(20), primary_key=True)
@@ -217,8 +217,8 @@ t_cdm_source = Table(
     Column('cdm_version', String(10)),
     Column('cdm_version_concept_id', Integer, nullable=False),
     Column('vocabulary_version', String(20), nullable=False),
-    ForeignKeyConstraint(['cdm_version_concept_id'], ['concept.concept_id'], name='fpk_cdm_source_cdm_version_concept_id'),
-    
+    ForeignKeyConstraint(['cdm_version_concept_id'], ['vocab.concept.concept_id'], name='fpk_cdm_source_cdm_version_concept_id'),
+    schema='vocab'
 )
 
 
@@ -231,9 +231,9 @@ t_cohort_definition = Table(
     Column('cohort_definition_syntax', Text),
     Column('subject_concept_id', Integer, nullable=False),
     Column('cohort_initiation_date', Date),
-    ForeignKeyConstraint(['definition_type_concept_id'], ['concept.concept_id'], name='fpk_cohort_definition_definition_type_concept_id'),
-    ForeignKeyConstraint(['subject_concept_id'], ['concept.concept_id'], name='fpk_cohort_definition_subject_concept_id'),
-    
+    ForeignKeyConstraint(['definition_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_cohort_definition_definition_type_concept_id'),
+    ForeignKeyConstraint(['subject_concept_id'], ['vocab.concept.concept_id'], name='fpk_cohort_definition_subject_concept_id'),
+    schema='vocab'
 )
 
 
@@ -243,11 +243,11 @@ t_concept_ancestor = Table(
     Column('descendant_concept_id', Integer, nullable=False),
     Column('min_levels_of_separation', Integer, nullable=False),
     Column('max_levels_of_separation', Integer, nullable=False),
-    ForeignKeyConstraint(['ancestor_concept_id'], ['concept.concept_id'], name='fpk_concept_ancestor_ancestor_concept_id'),
-    ForeignKeyConstraint(['descendant_concept_id'], ['concept.concept_id'], name='fpk_concept_ancestor_descendant_concept_id'),
+    ForeignKeyConstraint(['ancestor_concept_id'], ['vocab.concept.concept_id'], name='fpk_concept_ancestor_ancestor_concept_id'),
+    ForeignKeyConstraint(['descendant_concept_id'], ['vocab.concept.concept_id'], name='fpk_concept_ancestor_descendant_concept_id'),
     Index('idx_concept_ancestor_id_1', 'ancestor_concept_id'),
     Index('idx_concept_ancestor_id_2', 'descendant_concept_id'),
-    
+    schema='vocab'
 )
 
 
@@ -256,24 +256,24 @@ t_concept_synonym = Table(
     Column('concept_id', Integer, nullable=False),
     Column('concept_synonym_name', String(1000), nullable=False),
     Column('language_concept_id', Integer, nullable=False),
-    ForeignKeyConstraint(['concept_id'], ['concept.concept_id'], name='fpk_concept_synonym_concept_id'),
-    ForeignKeyConstraint(['language_concept_id'], ['concept.concept_id'], name='fpk_concept_synonym_language_concept_id'),
+    ForeignKeyConstraint(['concept_id'], ['vocab.concept.concept_id'], name='fpk_concept_synonym_concept_id'),
+    ForeignKeyConstraint(['language_concept_id'], ['vocab.concept.concept_id'], name='fpk_concept_synonym_language_concept_id'),
     Index('idx_concept_synonym_id', 'concept_id'),
-    
+    schema='vocab'
 )
 
 
 class Cost(Base):
     __tablename__ = 'cost'
     __table_args__ = (
-        ForeignKeyConstraint(['cost_domain_id'], ['domain.domain_id'], name='fpk_cost_cost_domain_id'),
-        ForeignKeyConstraint(['cost_type_concept_id'], ['concept.concept_id'], name='fpk_cost_cost_type_concept_id'),
-        ForeignKeyConstraint(['currency_concept_id'], ['concept.concept_id'], name='fpk_cost_currency_concept_id'),
-        ForeignKeyConstraint(['drg_concept_id'], ['concept.concept_id'], name='fpk_cost_drg_concept_id'),
-        ForeignKeyConstraint(['revenue_code_concept_id'], ['concept.concept_id'], name='fpk_cost_revenue_code_concept_id'),
+        ForeignKeyConstraint(['cost_domain_id'], ['vocab.domain.domain_id'], name='fpk_cost_cost_domain_id'),
+        ForeignKeyConstraint(['cost_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_cost_cost_type_concept_id'),
+        ForeignKeyConstraint(['currency_concept_id'], ['vocab.concept.concept_id'], name='fpk_cost_currency_concept_id'),
+        ForeignKeyConstraint(['drg_concept_id'], ['vocab.concept.concept_id'], name='fpk_cost_drg_concept_id'),
+        ForeignKeyConstraint(['revenue_code_concept_id'], ['vocab.concept.concept_id'], name='fpk_cost_revenue_code_concept_id'),
         PrimaryKeyConstraint('cost_id', name='xpk_cost'),
         Index('idx_cost_event_id', 'cost_event_id'),
-        
+        {'schema': 'vocab'}
     )
 
     cost_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -320,14 +320,14 @@ t_drug_strength = Table(
     Column('valid_start_date', Date, nullable=False),
     Column('valid_end_date', Date, nullable=False),
     Column('invalid_reason', String(1)),
-    ForeignKeyConstraint(['amount_unit_concept_id'], ['concept.concept_id'], name='fpk_drug_strength_amount_unit_concept_id'),
-    ForeignKeyConstraint(['denominator_unit_concept_id'], ['concept.concept_id'], name='fpk_drug_strength_denominator_unit_concept_id'),
-    ForeignKeyConstraint(['drug_concept_id'], ['concept.concept_id'], name='fpk_drug_strength_drug_concept_id'),
-    ForeignKeyConstraint(['ingredient_concept_id'], ['concept.concept_id'], name='fpk_drug_strength_ingredient_concept_id'),
-    ForeignKeyConstraint(['numerator_unit_concept_id'], ['concept.concept_id'], name='fpk_drug_strength_numerator_unit_concept_id'),
+    ForeignKeyConstraint(['amount_unit_concept_id'], ['vocab.concept.concept_id'], name='fpk_drug_strength_amount_unit_concept_id'),
+    ForeignKeyConstraint(['denominator_unit_concept_id'], ['vocab.concept.concept_id'], name='fpk_drug_strength_denominator_unit_concept_id'),
+    ForeignKeyConstraint(['drug_concept_id'], ['vocab.concept.concept_id'], name='fpk_drug_strength_drug_concept_id'),
+    ForeignKeyConstraint(['ingredient_concept_id'], ['vocab.concept.concept_id'], name='fpk_drug_strength_ingredient_concept_id'),
+    ForeignKeyConstraint(['numerator_unit_concept_id'], ['vocab.concept.concept_id'], name='fpk_drug_strength_numerator_unit_concept_id'),
     Index('idx_drug_strength_id_1', 'drug_concept_id'),
     Index('idx_drug_strength_id_2', 'ingredient_concept_id'),
-    
+    schema='vocab'
 )
 
 
@@ -338,23 +338,23 @@ t_fact_relationship = Table(
     Column('domain_concept_id_2', Integer, nullable=False),
     Column('fact_id_2', Integer, nullable=False),
     Column('relationship_concept_id', Integer, nullable=False),
-    ForeignKeyConstraint(['domain_concept_id_1'], ['concept.concept_id'], name='fpk_fact_relationship_domain_concept_id_1'),
-    ForeignKeyConstraint(['domain_concept_id_2'], ['concept.concept_id'], name='fpk_fact_relationship_domain_concept_id_2'),
-    ForeignKeyConstraint(['relationship_concept_id'], ['concept.concept_id'], name='fpk_fact_relationship_relationship_concept_id'),
+    ForeignKeyConstraint(['domain_concept_id_1'], ['vocab.concept.concept_id'], name='fpk_fact_relationship_domain_concept_id_1'),
+    ForeignKeyConstraint(['domain_concept_id_2'], ['vocab.concept.concept_id'], name='fpk_fact_relationship_domain_concept_id_2'),
+    ForeignKeyConstraint(['relationship_concept_id'], ['vocab.concept.concept_id'], name='fpk_fact_relationship_relationship_concept_id'),
     Index('idx_fact_relationship_id1', 'domain_concept_id_1'),
     Index('idx_fact_relationship_id2', 'domain_concept_id_2'),
     Index('idx_fact_relationship_id3', 'relationship_concept_id'),
-    
+    schema='vocab'
 )
 
 
 class Location(Base):
     __tablename__ = 'location'
     __table_args__ = (
-        ForeignKeyConstraint(['country_concept_id'], ['concept.concept_id'], name='fpk_location_country_concept_id'),
+        ForeignKeyConstraint(['country_concept_id'], ['vocab.concept.concept_id'], name='fpk_location_country_concept_id'),
         PrimaryKeyConstraint('location_id', name='xpk_location'),
         Index('idx_location_id_1', 'location_id'),
-        
+        {'schema': 'vocab'}
     )
 
     location_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -378,12 +378,12 @@ class Location(Base):
 class Metadata(Base):
     __tablename__ = 'metadata'
     __table_args__ = (
-        ForeignKeyConstraint(['metadata_concept_id'], ['concept.concept_id'], name='fpk_metadata_metadata_concept_id'),
-        ForeignKeyConstraint(['metadata_type_concept_id'], ['concept.concept_id'], name='fpk_metadata_metadata_type_concept_id'),
-        ForeignKeyConstraint(['value_as_concept_id'], ['concept.concept_id'], name='fpk_metadata_value_as_concept_id'),
+        ForeignKeyConstraint(['metadata_concept_id'], ['vocab.concept.concept_id'], name='fpk_metadata_metadata_concept_id'),
+        ForeignKeyConstraint(['metadata_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_metadata_metadata_type_concept_id'),
+        ForeignKeyConstraint(['value_as_concept_id'], ['vocab.concept.concept_id'], name='fpk_metadata_value_as_concept_id'),
         PrimaryKeyConstraint('metadata_id', name='xpk_metadata'),
         Index('idx_metadata_concept_id_1', 'metadata_concept_id'),
-        
+        {'schema': 'vocab'}
     )
 
     metadata_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -404,13 +404,13 @@ class Metadata(Base):
 class NoteNlp(Base):
     __tablename__ = 'note_nlp'
     __table_args__ = (
-        ForeignKeyConstraint(['note_nlp_concept_id'], ['concept.concept_id'], name='fpk_note_nlp_note_nlp_concept_id'),
-        ForeignKeyConstraint(['note_nlp_source_concept_id'], ['concept.concept_id'], name='fpk_note_nlp_note_nlp_source_concept_id'),
-        ForeignKeyConstraint(['section_concept_id'], ['concept.concept_id'], name='fpk_note_nlp_section_concept_id'),
+        ForeignKeyConstraint(['note_nlp_concept_id'], ['vocab.concept.concept_id'], name='fpk_note_nlp_note_nlp_concept_id'),
+        ForeignKeyConstraint(['note_nlp_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_note_nlp_note_nlp_source_concept_id'),
+        ForeignKeyConstraint(['section_concept_id'], ['vocab.concept.concept_id'], name='fpk_note_nlp_section_concept_id'),
         PrimaryKeyConstraint('note_nlp_id', name='xpk_note_nlp'),
         Index('idx_note_nlp_concept_id_1', 'note_nlp_concept_id'),
         Index('idx_note_nlp_note_id_1', 'note_id'),
-        
+        {'schema': 'vocab'}
     )
 
     note_nlp_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -436,10 +436,10 @@ class NoteNlp(Base):
 class Relationship(Base):
     __tablename__ = 'relationship'
     __table_args__ = (
-        ForeignKeyConstraint(['relationship_concept_id'], ['concept.concept_id'], name='fpk_relationship_relationship_concept_id'),
+        ForeignKeyConstraint(['relationship_concept_id'], ['vocab.concept.concept_id'], name='fpk_relationship_relationship_concept_id'),
         PrimaryKeyConstraint('relationship_id', name='xpk_relationship'),
         Index('idx_relationship_rel_id', 'relationship_id'),
-        
+        {'schema': 'vocab'}
     )
 
     relationship_id: Mapped[str] = mapped_column(String(20), primary_key=True)
@@ -463,25 +463,25 @@ t_source_to_concept_map = Table(
     Column('valid_start_date', Date, nullable=False),
     Column('valid_end_date', Date, nullable=False),
     Column('invalid_reason', String(1)),
-    ForeignKeyConstraint(['source_concept_id'], ['concept.concept_id'], name='fpk_source_to_concept_map_source_concept_id'),
-    ForeignKeyConstraint(['target_concept_id'], ['concept.concept_id'], name='fpk_source_to_concept_map_target_concept_id'),
-    ForeignKeyConstraint(['target_vocabulary_id'], ['vocabulary.vocabulary_id'], name='fpk_source_to_concept_map_target_vocabulary_id'),
+    ForeignKeyConstraint(['source_concept_id'], ['vocab.concept.concept_id'], name='fpk_source_to_concept_map_source_concept_id'),
+    ForeignKeyConstraint(['target_concept_id'], ['vocab.concept.concept_id'], name='fpk_source_to_concept_map_target_concept_id'),
+    ForeignKeyConstraint(['target_vocabulary_id'], ['vocab.vocabulary.vocabulary_id'], name='fpk_source_to_concept_map_target_vocabulary_id'),
     Index('idx_source_to_concept_map_1', 'source_vocabulary_id'),
     Index('idx_source_to_concept_map_2', 'target_vocabulary_id'),
     Index('idx_source_to_concept_map_3', 'target_concept_id'),
     Index('idx_source_to_concept_map_c', 'source_code'),
-    
+    schema='vocab'
 )
 
 
 class CareSite(Base):
     __tablename__ = 'care_site'
     __table_args__ = (
-        ForeignKeyConstraint(['location_id'], ['location.location_id'], name='fpk_care_site_location_id'),
-        ForeignKeyConstraint(['place_of_service_concept_id'], ['concept.concept_id'], name='fpk_care_site_place_of_service_concept_id'),
+        ForeignKeyConstraint(['location_id'], ['vocab.location.location_id'], name='fpk_care_site_location_id'),
+        ForeignKeyConstraint(['place_of_service_concept_id'], ['vocab.concept.concept_id'], name='fpk_care_site_place_of_service_concept_id'),
         PrimaryKeyConstraint('care_site_id', name='xpk_care_site'),
         Index('idx_care_site_id_1', 'care_site_id'),
-        
+        {'schema': 'vocab'}
     )
 
     care_site_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -507,27 +507,27 @@ t_concept_relationship = Table(
     Column('valid_start_date', Date, nullable=False),
     Column('valid_end_date', Date, nullable=False),
     Column('invalid_reason', String(1)),
-    ForeignKeyConstraint(['concept_id_1'], ['concept.concept_id'], name='fpk_concept_relationship_concept_id_1'),
-    ForeignKeyConstraint(['concept_id_2'], ['concept.concept_id'], name='fpk_concept_relationship_concept_id_2'),
-    ForeignKeyConstraint(['relationship_id'], ['relationship.relationship_id'], name='fpk_concept_relationship_relationship_id'),
+    ForeignKeyConstraint(['concept_id_1'], ['vocab.concept.concept_id'], name='fpk_concept_relationship_concept_id_1'),
+    ForeignKeyConstraint(['concept_id_2'], ['vocab.concept.concept_id'], name='fpk_concept_relationship_concept_id_2'),
+    ForeignKeyConstraint(['relationship_id'], ['vocab.relationship.relationship_id'], name='fpk_concept_relationship_relationship_id'),
     Index('idx_concept_relationship_id_1', 'concept_id_1'),
     Index('idx_concept_relationship_id_2', 'concept_id_2'),
     Index('idx_concept_relationship_id_3', 'relationship_id'),
-    
+    schema='vocab'
 )
 
 
 class Provider(Base):
     __tablename__ = 'provider'
     __table_args__ = (
-        ForeignKeyConstraint(['care_site_id'], ['care_site.care_site_id'], name='fpk_provider_care_site_id'),
-        ForeignKeyConstraint(['gender_concept_id'], ['concept.concept_id'], name='fpk_provider_gender_concept_id'),
-        ForeignKeyConstraint(['gender_source_concept_id'], ['concept.concept_id'], name='fpk_provider_gender_source_concept_id'),
-        ForeignKeyConstraint(['specialty_concept_id'], ['concept.concept_id'], name='fpk_provider_specialty_concept_id'),
-        ForeignKeyConstraint(['specialty_source_concept_id'], ['concept.concept_id'], name='fpk_provider_specialty_source_concept_id'),
+        ForeignKeyConstraint(['care_site_id'], ['vocab.care_site.care_site_id'], name='fpk_provider_care_site_id'),
+        ForeignKeyConstraint(['gender_concept_id'], ['vocab.concept.concept_id'], name='fpk_provider_gender_concept_id'),
+        ForeignKeyConstraint(['gender_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_provider_gender_source_concept_id'),
+        ForeignKeyConstraint(['specialty_concept_id'], ['vocab.concept.concept_id'], name='fpk_provider_specialty_concept_id'),
+        ForeignKeyConstraint(['specialty_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_provider_specialty_source_concept_id'),
         PrimaryKeyConstraint('provider_id', name='xpk_provider'),
         Index('idx_provider_id_1', 'provider_id'),
-        
+        {'schema': 'vocab'}
     )
 
     provider_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -564,19 +564,19 @@ class Provider(Base):
 class Person(Base):
     __tablename__ = 'person'
     __table_args__ = (
-        ForeignKeyConstraint(['care_site_id'], ['care_site.care_site_id'], name='fpk_person_care_site_id'),
-        ForeignKeyConstraint(['ethnicity_concept_id'], ['concept.concept_id'], name='fpk_person_ethnicity_concept_id'),
-        ForeignKeyConstraint(['ethnicity_source_concept_id'], ['concept.concept_id'], name='fpk_person_ethnicity_source_concept_id'),
-        ForeignKeyConstraint(['gender_concept_id'], ['concept.concept_id'], name='fpk_person_gender_concept_id'),
-        ForeignKeyConstraint(['gender_source_concept_id'], ['concept.concept_id'], name='fpk_person_gender_source_concept_id'),
-        ForeignKeyConstraint(['location_id'], ['location.location_id'], name='fpk_person_location_id'),
-        ForeignKeyConstraint(['provider_id'], ['provider.provider_id'], name='fpk_person_provider_id'),
-        ForeignKeyConstraint(['race_concept_id'], ['concept.concept_id'], name='fpk_person_race_concept_id'),
-        ForeignKeyConstraint(['race_source_concept_id'], ['concept.concept_id'], name='fpk_person_race_source_concept_id'),
+        ForeignKeyConstraint(['care_site_id'], ['vocab.care_site.care_site_id'], name='fpk_person_care_site_id'),
+        ForeignKeyConstraint(['ethnicity_concept_id'], ['vocab.concept.concept_id'], name='fpk_person_ethnicity_concept_id'),
+        ForeignKeyConstraint(['ethnicity_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_person_ethnicity_source_concept_id'),
+        ForeignKeyConstraint(['gender_concept_id'], ['vocab.concept.concept_id'], name='fpk_person_gender_concept_id'),
+        ForeignKeyConstraint(['gender_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_person_gender_source_concept_id'),
+        ForeignKeyConstraint(['location_id'], ['vocab.location.location_id'], name='fpk_person_location_id'),
+        ForeignKeyConstraint(['provider_id'], ['vocab.provider.provider_id'], name='fpk_person_provider_id'),
+        ForeignKeyConstraint(['race_concept_id'], ['vocab.concept.concept_id'], name='fpk_person_race_concept_id'),
+        ForeignKeyConstraint(['race_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_person_race_source_concept_id'),
         PrimaryKeyConstraint('person_id', name='xpk_person'),
         Index('idx_gender', 'gender_concept_id'),
         Index('idx_person_id', 'person_id'),
-        
+        {'schema': 'vocab'}
     )
 
     person_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -628,12 +628,12 @@ class Person(Base):
 class ConditionEra(Base):
     __tablename__ = 'condition_era'
     __table_args__ = (
-        ForeignKeyConstraint(['condition_concept_id'], ['concept.concept_id'], name='fpk_condition_era_condition_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_condition_era_person_id'),
+        ForeignKeyConstraint(['condition_concept_id'], ['vocab.concept.concept_id'], name='fpk_condition_era_condition_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_condition_era_person_id'),
         PrimaryKeyConstraint('condition_era_id', name='xpk_condition_era'),
         Index('idx_condition_era_concept_id_1', 'condition_concept_id'),
         Index('idx_condition_era_person_id_1', 'person_id'),
-        
+        {'schema': 'vocab'}
     )
 
     condition_era_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -656,25 +656,25 @@ t_death = Table(
     Column('cause_concept_id', Integer),
     Column('cause_source_value', String(50)),
     Column('cause_source_concept_id', Integer),
-    ForeignKeyConstraint(['cause_concept_id'], ['concept.concept_id'], name='fpk_death_cause_concept_id'),
-    ForeignKeyConstraint(['cause_source_concept_id'], ['concept.concept_id'], name='fpk_death_cause_source_concept_id'),
-    ForeignKeyConstraint(['death_type_concept_id'], ['concept.concept_id'], name='fpk_death_death_type_concept_id'),
-    ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_death_person_id'),
+    ForeignKeyConstraint(['cause_concept_id'], ['vocab.concept.concept_id'], name='fpk_death_cause_concept_id'),
+    ForeignKeyConstraint(['cause_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_death_cause_source_concept_id'),
+    ForeignKeyConstraint(['death_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_death_death_type_concept_id'),
+    ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_death_person_id'),
     Index('idx_death_person_id_1', 'person_id'),
-    
+    schema='vocab'
 )
 
 
 class DoseEra(Base):
     __tablename__ = 'dose_era'
     __table_args__ = (
-        ForeignKeyConstraint(['drug_concept_id'], ['concept.concept_id'], name='fpk_dose_era_drug_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_dose_era_person_id'),
-        ForeignKeyConstraint(['unit_concept_id'], ['concept.concept_id'], name='fpk_dose_era_unit_concept_id'),
+        ForeignKeyConstraint(['drug_concept_id'], ['vocab.concept.concept_id'], name='fpk_dose_era_drug_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_dose_era_person_id'),
+        ForeignKeyConstraint(['unit_concept_id'], ['vocab.concept.concept_id'], name='fpk_dose_era_unit_concept_id'),
         PrimaryKeyConstraint('dose_era_id', name='xpk_dose_era'),
         Index('idx_dose_era_concept_id_1', 'drug_concept_id'),
         Index('idx_dose_era_person_id_1', 'person_id'),
-        
+        {'schema': 'vocab'}
     )
 
     dose_era_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -693,12 +693,12 @@ class DoseEra(Base):
 class DrugEra(Base):
     __tablename__ = 'drug_era'
     __table_args__ = (
-        ForeignKeyConstraint(['drug_concept_id'], ['concept.concept_id'], name='fpk_drug_era_drug_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_drug_era_person_id'),
+        ForeignKeyConstraint(['drug_concept_id'], ['vocab.concept.concept_id'], name='fpk_drug_era_drug_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_drug_era_person_id'),
         PrimaryKeyConstraint('drug_era_id', name='xpk_drug_era'),
         Index('idx_drug_era_concept_id_1', 'drug_concept_id'),
         Index('idx_drug_era_person_id_1', 'person_id'),
-        
+        {'schema': 'vocab'}
     )
 
     drug_era_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -716,13 +716,13 @@ class DrugEra(Base):
 class Episode(Base):
     __tablename__ = 'episode'
     __table_args__ = (
-        ForeignKeyConstraint(['episode_concept_id'], ['concept.concept_id'], name='fpk_episode_episode_concept_id'),
-        ForeignKeyConstraint(['episode_object_concept_id'], ['concept.concept_id'], name='fpk_episode_episode_object_concept_id'),
-        ForeignKeyConstraint(['episode_source_concept_id'], ['concept.concept_id'], name='fpk_episode_episode_source_concept_id'),
-        ForeignKeyConstraint(['episode_type_concept_id'], ['concept.concept_id'], name='fpk_episode_episode_type_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_episode_person_id'),
+        ForeignKeyConstraint(['episode_concept_id'], ['vocab.concept.concept_id'], name='fpk_episode_episode_concept_id'),
+        ForeignKeyConstraint(['episode_object_concept_id'], ['vocab.concept.concept_id'], name='fpk_episode_episode_object_concept_id'),
+        ForeignKeyConstraint(['episode_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_episode_episode_source_concept_id'),
+        ForeignKeyConstraint(['episode_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_episode_episode_type_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_episode_person_id'),
         PrimaryKeyConstraint('episode_id', name='xpk_episode'),
-        
+        {'schema': 'vocab'}
     )
 
     episode_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -749,11 +749,11 @@ class Episode(Base):
 class ObservationPeriod(Base):
     __tablename__ = 'observation_period'
     __table_args__ = (
-        ForeignKeyConstraint(['period_type_concept_id'], ['concept.concept_id'], name='fpk_observation_period_period_type_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_observation_period_person_id'),
+        ForeignKeyConstraint(['period_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_observation_period_period_type_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_observation_period_person_id'),
         PrimaryKeyConstraint('observation_period_id', name='xpk_observation_period'),
         Index('idx_observation_period_id_1', 'person_id'),
-        
+        {'schema': 'vocab'}
     )
 
     observation_period_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -769,18 +769,18 @@ class ObservationPeriod(Base):
 class PayerPlanPeriod(Base):
     __tablename__ = 'payer_plan_period'
     __table_args__ = (
-        ForeignKeyConstraint(['payer_concept_id'], ['concept.concept_id'], name='fpk_payer_plan_period_payer_concept_id'),
-        ForeignKeyConstraint(['payer_source_concept_id'], ['concept.concept_id'], name='fpk_payer_plan_period_payer_source_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_payer_plan_period_person_id'),
-        ForeignKeyConstraint(['plan_concept_id'], ['concept.concept_id'], name='fpk_payer_plan_period_plan_concept_id'),
-        ForeignKeyConstraint(['plan_source_concept_id'], ['concept.concept_id'], name='fpk_payer_plan_period_plan_source_concept_id'),
-        ForeignKeyConstraint(['sponsor_concept_id'], ['concept.concept_id'], name='fpk_payer_plan_period_sponsor_concept_id'),
-        ForeignKeyConstraint(['sponsor_source_concept_id'], ['concept.concept_id'], name='fpk_payer_plan_period_sponsor_source_concept_id'),
-        ForeignKeyConstraint(['stop_reason_concept_id'], ['concept.concept_id'], name='fpk_payer_plan_period_stop_reason_concept_id'),
-        ForeignKeyConstraint(['stop_reason_source_concept_id'], ['concept.concept_id'], name='fpk_payer_plan_period_stop_reason_source_concept_id'),
+        ForeignKeyConstraint(['payer_concept_id'], ['vocab.concept.concept_id'], name='fpk_payer_plan_period_payer_concept_id'),
+        ForeignKeyConstraint(['payer_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_payer_plan_period_payer_source_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_payer_plan_period_person_id'),
+        ForeignKeyConstraint(['plan_concept_id'], ['vocab.concept.concept_id'], name='fpk_payer_plan_period_plan_concept_id'),
+        ForeignKeyConstraint(['plan_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_payer_plan_period_plan_source_concept_id'),
+        ForeignKeyConstraint(['sponsor_concept_id'], ['vocab.concept.concept_id'], name='fpk_payer_plan_period_sponsor_concept_id'),
+        ForeignKeyConstraint(['sponsor_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_payer_plan_period_sponsor_source_concept_id'),
+        ForeignKeyConstraint(['stop_reason_concept_id'], ['vocab.concept.concept_id'], name='fpk_payer_plan_period_stop_reason_concept_id'),
+        ForeignKeyConstraint(['stop_reason_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_payer_plan_period_stop_reason_source_concept_id'),
         PrimaryKeyConstraint('payer_plan_period_id', name='xpk_payer_plan_period'),
         Index('idx_period_person_id_1', 'person_id'),
-        
+        {'schema': 'vocab'}
     )
 
     payer_plan_period_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -815,16 +815,16 @@ class PayerPlanPeriod(Base):
 class Specimen(Base):
     __tablename__ = 'specimen'
     __table_args__ = (
-        ForeignKeyConstraint(['anatomic_site_concept_id'], ['concept.concept_id'], name='fpk_specimen_anatomic_site_concept_id'),
-        ForeignKeyConstraint(['disease_status_concept_id'], ['concept.concept_id'], name='fpk_specimen_disease_status_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_specimen_person_id'),
-        ForeignKeyConstraint(['specimen_concept_id'], ['concept.concept_id'], name='fpk_specimen_specimen_concept_id'),
-        ForeignKeyConstraint(['specimen_type_concept_id'], ['concept.concept_id'], name='fpk_specimen_specimen_type_concept_id'),
-        ForeignKeyConstraint(['unit_concept_id'], ['concept.concept_id'], name='fpk_specimen_unit_concept_id'),
+        ForeignKeyConstraint(['anatomic_site_concept_id'], ['vocab.concept.concept_id'], name='fpk_specimen_anatomic_site_concept_id'),
+        ForeignKeyConstraint(['disease_status_concept_id'], ['vocab.concept.concept_id'], name='fpk_specimen_disease_status_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_specimen_person_id'),
+        ForeignKeyConstraint(['specimen_concept_id'], ['vocab.concept.concept_id'], name='fpk_specimen_specimen_concept_id'),
+        ForeignKeyConstraint(['specimen_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_specimen_specimen_type_concept_id'),
+        ForeignKeyConstraint(['unit_concept_id'], ['vocab.concept.concept_id'], name='fpk_specimen_unit_concept_id'),
         PrimaryKeyConstraint('specimen_id', name='xpk_specimen'),
         Index('idx_specimen_concept_id_1', 'specimen_concept_id'),
         Index('idx_specimen_person_id_1', 'person_id'),
-        
+        {'schema': 'vocab'}
     )
 
     specimen_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -854,19 +854,19 @@ class Specimen(Base):
 class VisitOccurrence(Base):
     __tablename__ = 'visit_occurrence'
     __table_args__ = (
-        ForeignKeyConstraint(['admitted_from_concept_id'], ['concept.concept_id'], name='fpk_visit_occurrence_admitted_from_concept_id'),
-        ForeignKeyConstraint(['care_site_id'], ['care_site.care_site_id'], name='fpk_visit_occurrence_care_site_id'),
-        ForeignKeyConstraint(['discharged_to_concept_id'], ['concept.concept_id'], name='fpk_visit_occurrence_discharged_to_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_visit_occurrence_person_id'),
-        ForeignKeyConstraint(['preceding_visit_occurrence_id'], ['visit_occurrence.visit_occurrence_id'], name='fpk_visit_occurrence_preceding_visit_occurrence_id'),
-        ForeignKeyConstraint(['provider_id'], ['provider.provider_id'], name='fpk_visit_occurrence_provider_id'),
-        ForeignKeyConstraint(['visit_concept_id'], ['concept.concept_id'], name='fpk_visit_occurrence_visit_concept_id'),
-        ForeignKeyConstraint(['visit_source_concept_id'], ['concept.concept_id'], name='fpk_visit_occurrence_visit_source_concept_id'),
-        ForeignKeyConstraint(['visit_type_concept_id'], ['concept.concept_id'], name='fpk_visit_occurrence_visit_type_concept_id'),
+        ForeignKeyConstraint(['admitted_from_concept_id'], ['vocab.concept.concept_id'], name='fpk_visit_occurrence_admitted_from_concept_id'),
+        ForeignKeyConstraint(['care_site_id'], ['vocab.care_site.care_site_id'], name='fpk_visit_occurrence_care_site_id'),
+        ForeignKeyConstraint(['discharged_to_concept_id'], ['vocab.concept.concept_id'], name='fpk_visit_occurrence_discharged_to_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_visit_occurrence_person_id'),
+        ForeignKeyConstraint(['preceding_visit_occurrence_id'], ['vocab.visit_occurrence.visit_occurrence_id'], name='fpk_visit_occurrence_preceding_visit_occurrence_id'),
+        ForeignKeyConstraint(['provider_id'], ['vocab.provider.provider_id'], name='fpk_visit_occurrence_provider_id'),
+        ForeignKeyConstraint(['visit_concept_id'], ['vocab.concept.concept_id'], name='fpk_visit_occurrence_visit_concept_id'),
+        ForeignKeyConstraint(['visit_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_visit_occurrence_visit_source_concept_id'),
+        ForeignKeyConstraint(['visit_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_visit_occurrence_visit_type_concept_id'),
         PrimaryKeyConstraint('visit_occurrence_id', name='xpk_visit_occurrence'),
         Index('idx_visit_concept_id_1', 'visit_concept_id'),
         Index('idx_visit_person_id_1', 'person_id'),
-        
+        {'schema': 'vocab'}
     )
 
     visit_occurrence_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -912,31 +912,31 @@ t_episode_event = Table(
     Column('episode_id', Integer, nullable=False),
     Column('event_id', Integer, nullable=False),
     Column('episode_event_field_concept_id', Integer, nullable=False),
-    ForeignKeyConstraint(['episode_event_field_concept_id'], ['concept.concept_id'], name='fpk_episode_event_episode_event_field_concept_id'),
-    ForeignKeyConstraint(['episode_id'], ['episode.episode_id'], name='fpk_episode_event_episode_id'),
-    
+    ForeignKeyConstraint(['episode_event_field_concept_id'], ['vocab.concept.concept_id'], name='fpk_episode_event_episode_event_field_concept_id'),
+    ForeignKeyConstraint(['episode_id'], ['vocab.episode.episode_id'], name='fpk_episode_event_episode_id'),
+    schema='vocab'
 )
 
 
 class VisitDetail(Base):
     __tablename__ = 'visit_detail'
     __table_args__ = (
-        ForeignKeyConstraint(['admitted_from_concept_id'], ['concept.concept_id'], name='fpk_visit_detail_admitted_from_concept_id'),
-        ForeignKeyConstraint(['care_site_id'], ['care_site.care_site_id'], name='fpk_visit_detail_care_site_id'),
-        ForeignKeyConstraint(['discharged_to_concept_id'], ['concept.concept_id'], name='fpk_visit_detail_discharged_to_concept_id'),
-        ForeignKeyConstraint(['parent_visit_detail_id'], ['visit_detail.visit_detail_id'], name='fpk_visit_detail_parent_visit_detail_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_visit_detail_person_id'),
-        ForeignKeyConstraint(['preceding_visit_detail_id'], ['visit_detail.visit_detail_id'], name='fpk_visit_detail_preceding_visit_detail_id'),
-        ForeignKeyConstraint(['provider_id'], ['provider.provider_id'], name='fpk_visit_detail_provider_id'),
-        ForeignKeyConstraint(['visit_detail_concept_id'], ['concept.concept_id'], name='fpk_visit_detail_visit_detail_concept_id'),
-        ForeignKeyConstraint(['visit_detail_source_concept_id'], ['concept.concept_id'], name='fpk_visit_detail_visit_detail_source_concept_id'),
-        ForeignKeyConstraint(['visit_detail_type_concept_id'], ['concept.concept_id'], name='fpk_visit_detail_visit_detail_type_concept_id'),
-        ForeignKeyConstraint(['visit_occurrence_id'], ['visit_occurrence.visit_occurrence_id'], name='fpk_visit_detail_visit_occurrence_id'),
+        ForeignKeyConstraint(['admitted_from_concept_id'], ['vocab.concept.concept_id'], name='fpk_visit_detail_admitted_from_concept_id'),
+        ForeignKeyConstraint(['care_site_id'], ['vocab.care_site.care_site_id'], name='fpk_visit_detail_care_site_id'),
+        ForeignKeyConstraint(['discharged_to_concept_id'], ['vocab.concept.concept_id'], name='fpk_visit_detail_discharged_to_concept_id'),
+        ForeignKeyConstraint(['parent_visit_detail_id'], ['vocab.visit_detail.visit_detail_id'], name='fpk_visit_detail_parent_visit_detail_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_visit_detail_person_id'),
+        ForeignKeyConstraint(['preceding_visit_detail_id'], ['vocab.visit_detail.visit_detail_id'], name='fpk_visit_detail_preceding_visit_detail_id'),
+        ForeignKeyConstraint(['provider_id'], ['vocab.provider.provider_id'], name='fpk_visit_detail_provider_id'),
+        ForeignKeyConstraint(['visit_detail_concept_id'], ['vocab.concept.concept_id'], name='fpk_visit_detail_visit_detail_concept_id'),
+        ForeignKeyConstraint(['visit_detail_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_visit_detail_visit_detail_source_concept_id'),
+        ForeignKeyConstraint(['visit_detail_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_visit_detail_visit_detail_type_concept_id'),
+        ForeignKeyConstraint(['visit_occurrence_id'], ['vocab.visit_occurrence.visit_occurrence_id'], name='fpk_visit_detail_visit_occurrence_id'),
         PrimaryKeyConstraint('visit_detail_id', name='xpk_visit_detail'),
         Index('idx_visit_det_concept_id_1', 'visit_detail_concept_id'),
         Index('idx_visit_det_occ_id', 'visit_occurrence_id'),
         Index('idx_visit_det_person_id_1', 'person_id'),
-        
+        {'schema': 'vocab'}
     )
 
     visit_detail_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -984,19 +984,19 @@ class VisitDetail(Base):
 class ConditionOccurrence(Base):
     __tablename__ = 'condition_occurrence'
     __table_args__ = (
-        ForeignKeyConstraint(['condition_concept_id'], ['concept.concept_id'], name='fpk_condition_occurrence_condition_concept_id'),
-        ForeignKeyConstraint(['condition_source_concept_id'], ['concept.concept_id'], name='fpk_condition_occurrence_condition_source_concept_id'),
-        ForeignKeyConstraint(['condition_status_concept_id'], ['concept.concept_id'], name='fpk_condition_occurrence_condition_status_concept_id'),
-        ForeignKeyConstraint(['condition_type_concept_id'], ['concept.concept_id'], name='fpk_condition_occurrence_condition_type_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_condition_occurrence_person_id'),
-        ForeignKeyConstraint(['provider_id'], ['provider.provider_id'], name='fpk_condition_occurrence_provider_id'),
-        ForeignKeyConstraint(['visit_detail_id'], ['visit_detail.visit_detail_id'], name='fpk_condition_occurrence_visit_detail_id'),
-        ForeignKeyConstraint(['visit_occurrence_id'], ['visit_occurrence.visit_occurrence_id'], name='fpk_condition_occurrence_visit_occurrence_id'),
+        ForeignKeyConstraint(['condition_concept_id'], ['vocab.concept.concept_id'], name='fpk_condition_occurrence_condition_concept_id'),
+        ForeignKeyConstraint(['condition_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_condition_occurrence_condition_source_concept_id'),
+        ForeignKeyConstraint(['condition_status_concept_id'], ['vocab.concept.concept_id'], name='fpk_condition_occurrence_condition_status_concept_id'),
+        ForeignKeyConstraint(['condition_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_condition_occurrence_condition_type_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_condition_occurrence_person_id'),
+        ForeignKeyConstraint(['provider_id'], ['vocab.provider.provider_id'], name='fpk_condition_occurrence_provider_id'),
+        ForeignKeyConstraint(['visit_detail_id'], ['vocab.visit_detail.visit_detail_id'], name='fpk_condition_occurrence_visit_detail_id'),
+        ForeignKeyConstraint(['visit_occurrence_id'], ['vocab.visit_occurrence.visit_occurrence_id'], name='fpk_condition_occurrence_visit_occurrence_id'),
         PrimaryKeyConstraint('condition_occurrence_id', name='xpk_condition_occurrence'),
         Index('idx_condition_concept_id_1', 'condition_concept_id'),
         Index('idx_condition_person_id_1', 'person_id'),
         Index('idx_condition_visit_id_1', 'visit_occurrence_id'),
-        
+        {'schema': 'vocab'}
     )
 
     condition_occurrence_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -1029,20 +1029,20 @@ class ConditionOccurrence(Base):
 class DeviceExposure(Base):
     __tablename__ = 'device_exposure'
     __table_args__ = (
-        ForeignKeyConstraint(['device_concept_id'], ['concept.concept_id'], name='fpk_device_exposure_device_concept_id'),
-        ForeignKeyConstraint(['device_source_concept_id'], ['concept.concept_id'], name='fpk_device_exposure_device_source_concept_id'),
-        ForeignKeyConstraint(['device_type_concept_id'], ['concept.concept_id'], name='fpk_device_exposure_device_type_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_device_exposure_person_id'),
-        ForeignKeyConstraint(['provider_id'], ['provider.provider_id'], name='fpk_device_exposure_provider_id'),
-        ForeignKeyConstraint(['unit_concept_id'], ['concept.concept_id'], name='fpk_device_exposure_unit_concept_id'),
-        ForeignKeyConstraint(['unit_source_concept_id'], ['concept.concept_id'], name='fpk_device_exposure_unit_source_concept_id'),
-        ForeignKeyConstraint(['visit_detail_id'], ['visit_detail.visit_detail_id'], name='fpk_device_exposure_visit_detail_id'),
-        ForeignKeyConstraint(['visit_occurrence_id'], ['visit_occurrence.visit_occurrence_id'], name='fpk_device_exposure_visit_occurrence_id'),
+        ForeignKeyConstraint(['device_concept_id'], ['vocab.concept.concept_id'], name='fpk_device_exposure_device_concept_id'),
+        ForeignKeyConstraint(['device_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_device_exposure_device_source_concept_id'),
+        ForeignKeyConstraint(['device_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_device_exposure_device_type_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_device_exposure_person_id'),
+        ForeignKeyConstraint(['provider_id'], ['vocab.provider.provider_id'], name='fpk_device_exposure_provider_id'),
+        ForeignKeyConstraint(['unit_concept_id'], ['vocab.concept.concept_id'], name='fpk_device_exposure_unit_concept_id'),
+        ForeignKeyConstraint(['unit_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_device_exposure_unit_source_concept_id'),
+        ForeignKeyConstraint(['visit_detail_id'], ['vocab.visit_detail.visit_detail_id'], name='fpk_device_exposure_visit_detail_id'),
+        ForeignKeyConstraint(['visit_occurrence_id'], ['vocab.visit_occurrence.visit_occurrence_id'], name='fpk_device_exposure_visit_occurrence_id'),
         PrimaryKeyConstraint('device_exposure_id', name='xpk_device_exposure'),
         Index('idx_device_concept_id_1', 'device_concept_id'),
         Index('idx_device_person_id_1', 'person_id'),
         Index('idx_device_visit_id_1', 'visit_occurrence_id'),
-        
+        {'schema': 'vocab'}
     )
 
     device_exposure_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -1079,19 +1079,19 @@ class DeviceExposure(Base):
 class DrugExposure(Base):
     __tablename__ = 'drug_exposure'
     __table_args__ = (
-        ForeignKeyConstraint(['drug_concept_id'], ['concept.concept_id'], name='fpk_drug_exposure_drug_concept_id'),
-        ForeignKeyConstraint(['drug_source_concept_id'], ['concept.concept_id'], name='fpk_drug_exposure_drug_source_concept_id'),
-        ForeignKeyConstraint(['drug_type_concept_id'], ['concept.concept_id'], name='fpk_drug_exposure_drug_type_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_drug_exposure_person_id'),
-        ForeignKeyConstraint(['provider_id'], ['provider.provider_id'], name='fpk_drug_exposure_provider_id'),
-        ForeignKeyConstraint(['route_concept_id'], ['concept.concept_id'], name='fpk_drug_exposure_route_concept_id'),
-        ForeignKeyConstraint(['visit_detail_id'], ['visit_detail.visit_detail_id'], name='fpk_drug_exposure_visit_detail_id'),
-        ForeignKeyConstraint(['visit_occurrence_id'], ['visit_occurrence.visit_occurrence_id'], name='fpk_drug_exposure_visit_occurrence_id'),
+        ForeignKeyConstraint(['drug_concept_id'], ['vocab.concept.concept_id'], name='fpk_drug_exposure_drug_concept_id'),
+        ForeignKeyConstraint(['drug_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_drug_exposure_drug_source_concept_id'),
+        ForeignKeyConstraint(['drug_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_drug_exposure_drug_type_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_drug_exposure_person_id'),
+        ForeignKeyConstraint(['provider_id'], ['vocab.provider.provider_id'], name='fpk_drug_exposure_provider_id'),
+        ForeignKeyConstraint(['route_concept_id'], ['vocab.concept.concept_id'], name='fpk_drug_exposure_route_concept_id'),
+        ForeignKeyConstraint(['visit_detail_id'], ['vocab.visit_detail.visit_detail_id'], name='fpk_drug_exposure_visit_detail_id'),
+        ForeignKeyConstraint(['visit_occurrence_id'], ['vocab.visit_occurrence.visit_occurrence_id'], name='fpk_drug_exposure_visit_occurrence_id'),
         PrimaryKeyConstraint('drug_exposure_id', name='xpk_drug_exposure'),
         Index('idx_drug_concept_id_1', 'drug_concept_id'),
         Index('idx_drug_person_id_1', 'person_id'),
         Index('idx_drug_visit_id_1', 'visit_occurrence_id'),
-        
+        {'schema': 'vocab'}
     )
 
     drug_exposure_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -1131,23 +1131,23 @@ class DrugExposure(Base):
 class Measurement(Base):
     __tablename__ = 'measurement'
     __table_args__ = (
-        ForeignKeyConstraint(['meas_event_field_concept_id'], ['concept.concept_id'], name='fpk_measurement_meas_event_field_concept_id'),
-        ForeignKeyConstraint(['measurement_concept_id'], ['concept.concept_id'], name='fpk_measurement_measurement_concept_id'),
-        ForeignKeyConstraint(['measurement_source_concept_id'], ['concept.concept_id'], name='fpk_measurement_measurement_source_concept_id'),
-        ForeignKeyConstraint(['measurement_type_concept_id'], ['concept.concept_id'], name='fpk_measurement_measurement_type_concept_id'),
-        ForeignKeyConstraint(['operator_concept_id'], ['concept.concept_id'], name='fpk_measurement_operator_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_measurement_person_id'),
-        ForeignKeyConstraint(['provider_id'], ['provider.provider_id'], name='fpk_measurement_provider_id'),
-        ForeignKeyConstraint(['unit_concept_id'], ['concept.concept_id'], name='fpk_measurement_unit_concept_id'),
-        ForeignKeyConstraint(['unit_source_concept_id'], ['concept.concept_id'], name='fpk_measurement_unit_source_concept_id'),
-        ForeignKeyConstraint(['value_as_concept_id'], ['concept.concept_id'], name='fpk_measurement_value_as_concept_id'),
-        ForeignKeyConstraint(['visit_detail_id'], ['visit_detail.visit_detail_id'], name='fpk_measurement_visit_detail_id'),
-        ForeignKeyConstraint(['visit_occurrence_id'], ['visit_occurrence.visit_occurrence_id'], name='fpk_measurement_visit_occurrence_id'),
+        ForeignKeyConstraint(['meas_event_field_concept_id'], ['vocab.concept.concept_id'], name='fpk_measurement_meas_event_field_concept_id'),
+        ForeignKeyConstraint(['measurement_concept_id'], ['vocab.concept.concept_id'], name='fpk_measurement_measurement_concept_id'),
+        ForeignKeyConstraint(['measurement_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_measurement_measurement_source_concept_id'),
+        ForeignKeyConstraint(['measurement_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_measurement_measurement_type_concept_id'),
+        ForeignKeyConstraint(['operator_concept_id'], ['vocab.concept.concept_id'], name='fpk_measurement_operator_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_measurement_person_id'),
+        ForeignKeyConstraint(['provider_id'], ['vocab.provider.provider_id'], name='fpk_measurement_provider_id'),
+        ForeignKeyConstraint(['unit_concept_id'], ['vocab.concept.concept_id'], name='fpk_measurement_unit_concept_id'),
+        ForeignKeyConstraint(['unit_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_measurement_unit_source_concept_id'),
+        ForeignKeyConstraint(['value_as_concept_id'], ['vocab.concept.concept_id'], name='fpk_measurement_value_as_concept_id'),
+        ForeignKeyConstraint(['visit_detail_id'], ['vocab.visit_detail.visit_detail_id'], name='fpk_measurement_visit_detail_id'),
+        ForeignKeyConstraint(['visit_occurrence_id'], ['vocab.visit_occurrence.visit_occurrence_id'], name='fpk_measurement_visit_occurrence_id'),
         PrimaryKeyConstraint('measurement_id', name='xpk_measurement'),
         Index('idx_measurement_concept_id_1', 'measurement_concept_id'),
         Index('idx_measurement_person_id_1', 'person_id'),
         Index('idx_measurement_visit_id_1', 'visit_occurrence_id'),
-        
+        {'schema': 'vocab'}
     )
 
     measurement_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -1191,20 +1191,20 @@ class Measurement(Base):
 class Note(Base):
     __tablename__ = 'note'
     __table_args__ = (
-        ForeignKeyConstraint(['encoding_concept_id'], ['concept.concept_id'], name='fpk_note_encoding_concept_id'),
-        ForeignKeyConstraint(['language_concept_id'], ['concept.concept_id'], name='fpk_note_language_concept_id'),
-        ForeignKeyConstraint(['note_class_concept_id'], ['concept.concept_id'], name='fpk_note_note_class_concept_id'),
-        ForeignKeyConstraint(['note_event_field_concept_id'], ['concept.concept_id'], name='fpk_note_note_event_field_concept_id'),
-        ForeignKeyConstraint(['note_type_concept_id'], ['concept.concept_id'], name='fpk_note_note_type_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_note_person_id'),
-        ForeignKeyConstraint(['provider_id'], ['provider.provider_id'], name='fpk_note_provider_id'),
-        ForeignKeyConstraint(['visit_detail_id'], ['visit_detail.visit_detail_id'], name='fpk_note_visit_detail_id'),
-        ForeignKeyConstraint(['visit_occurrence_id'], ['visit_occurrence.visit_occurrence_id'], name='fpk_note_visit_occurrence_id'),
+        ForeignKeyConstraint(['encoding_concept_id'], ['vocab.concept.concept_id'], name='fpk_note_encoding_concept_id'),
+        ForeignKeyConstraint(['language_concept_id'], ['vocab.concept.concept_id'], name='fpk_note_language_concept_id'),
+        ForeignKeyConstraint(['note_class_concept_id'], ['vocab.concept.concept_id'], name='fpk_note_note_class_concept_id'),
+        ForeignKeyConstraint(['note_event_field_concept_id'], ['vocab.concept.concept_id'], name='fpk_note_note_event_field_concept_id'),
+        ForeignKeyConstraint(['note_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_note_note_type_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_note_person_id'),
+        ForeignKeyConstraint(['provider_id'], ['vocab.provider.provider_id'], name='fpk_note_provider_id'),
+        ForeignKeyConstraint(['visit_detail_id'], ['vocab.visit_detail.visit_detail_id'], name='fpk_note_visit_detail_id'),
+        ForeignKeyConstraint(['visit_occurrence_id'], ['vocab.visit_occurrence.visit_occurrence_id'], name='fpk_note_visit_occurrence_id'),
         PrimaryKeyConstraint('note_id', name='xpk_note'),
         Index('idx_note_concept_id_1', 'note_type_concept_id'),
         Index('idx_note_person_id_1', 'person_id'),
         Index('idx_note_visit_id_1', 'visit_occurrence_id'),
-        
+        {'schema': 'vocab'}
     )
 
     note_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -1238,22 +1238,22 @@ class Note(Base):
 class Observation(Base):
     __tablename__ = 'observation'
     __table_args__ = (
-        ForeignKeyConstraint(['obs_event_field_concept_id'], ['concept.concept_id'], name='fpk_observation_obs_event_field_concept_id'),
-        ForeignKeyConstraint(['observation_concept_id'], ['concept.concept_id'], name='fpk_observation_observation_concept_id'),
-        ForeignKeyConstraint(['observation_source_concept_id'], ['concept.concept_id'], name='fpk_observation_observation_source_concept_id'),
-        ForeignKeyConstraint(['observation_type_concept_id'], ['concept.concept_id'], name='fpk_observation_observation_type_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_observation_person_id'),
-        ForeignKeyConstraint(['provider_id'], ['provider.provider_id'], name='fpk_observation_provider_id'),
-        ForeignKeyConstraint(['qualifier_concept_id'], ['concept.concept_id'], name='fpk_observation_qualifier_concept_id'),
-        ForeignKeyConstraint(['unit_concept_id'], ['concept.concept_id'], name='fpk_observation_unit_concept_id'),
-        ForeignKeyConstraint(['value_as_concept_id'], ['concept.concept_id'], name='fpk_observation_value_as_concept_id'),
-        ForeignKeyConstraint(['visit_detail_id'], ['visit_detail.visit_detail_id'], name='fpk_observation_visit_detail_id'),
-        ForeignKeyConstraint(['visit_occurrence_id'], ['visit_occurrence.visit_occurrence_id'], name='fpk_observation_visit_occurrence_id'),
+        ForeignKeyConstraint(['obs_event_field_concept_id'], ['vocab.concept.concept_id'], name='fpk_observation_obs_event_field_concept_id'),
+        ForeignKeyConstraint(['observation_concept_id'], ['vocab.concept.concept_id'], name='fpk_observation_observation_concept_id'),
+        ForeignKeyConstraint(['observation_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_observation_observation_source_concept_id'),
+        ForeignKeyConstraint(['observation_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_observation_observation_type_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_observation_person_id'),
+        ForeignKeyConstraint(['provider_id'], ['vocab.provider.provider_id'], name='fpk_observation_provider_id'),
+        ForeignKeyConstraint(['qualifier_concept_id'], ['vocab.concept.concept_id'], name='fpk_observation_qualifier_concept_id'),
+        ForeignKeyConstraint(['unit_concept_id'], ['vocab.concept.concept_id'], name='fpk_observation_unit_concept_id'),
+        ForeignKeyConstraint(['value_as_concept_id'], ['vocab.concept.concept_id'], name='fpk_observation_value_as_concept_id'),
+        ForeignKeyConstraint(['visit_detail_id'], ['vocab.visit_detail.visit_detail_id'], name='fpk_observation_visit_detail_id'),
+        ForeignKeyConstraint(['visit_occurrence_id'], ['vocab.visit_occurrence.visit_occurrence_id'], name='fpk_observation_visit_occurrence_id'),
         PrimaryKeyConstraint('observation_id', name='xpk_observation'),
         Index('idx_observation_concept_id_1', 'observation_concept_id'),
         Index('idx_observation_person_id_1', 'person_id'),
         Index('idx_observation_visit_id_1', 'visit_occurrence_id'),
-        
+        {'schema': 'vocab'}
     )
 
     observation_id: Mapped[int] = mapped_column(Integer, primary_key=True)
@@ -1294,19 +1294,19 @@ class Observation(Base):
 class ProcedureOccurrence(Base):
     __tablename__ = 'procedure_occurrence'
     __table_args__ = (
-        ForeignKeyConstraint(['modifier_concept_id'], ['concept.concept_id'], name='fpk_procedure_occurrence_modifier_concept_id'),
-        ForeignKeyConstraint(['person_id'], ['person.person_id'], name='fpk_procedure_occurrence_person_id'),
-        ForeignKeyConstraint(['procedure_concept_id'], ['concept.concept_id'], name='fpk_procedure_occurrence_procedure_concept_id'),
-        ForeignKeyConstraint(['procedure_source_concept_id'], ['concept.concept_id'], name='fpk_procedure_occurrence_procedure_source_concept_id'),
-        ForeignKeyConstraint(['procedure_type_concept_id'], ['concept.concept_id'], name='fpk_procedure_occurrence_procedure_type_concept_id'),
-        ForeignKeyConstraint(['provider_id'], ['provider.provider_id'], name='fpk_procedure_occurrence_provider_id'),
-        ForeignKeyConstraint(['visit_detail_id'], ['visit_detail.visit_detail_id'], name='fpk_procedure_occurrence_visit_detail_id'),
-        ForeignKeyConstraint(['visit_occurrence_id'], ['visit_occurrence.visit_occurrence_id'], name='fpk_procedure_occurrence_visit_occurrence_id'),
+        ForeignKeyConstraint(['modifier_concept_id'], ['vocab.concept.concept_id'], name='fpk_procedure_occurrence_modifier_concept_id'),
+        ForeignKeyConstraint(['person_id'], ['vocab.person.person_id'], name='fpk_procedure_occurrence_person_id'),
+        ForeignKeyConstraint(['procedure_concept_id'], ['vocab.concept.concept_id'], name='fpk_procedure_occurrence_procedure_concept_id'),
+        ForeignKeyConstraint(['procedure_source_concept_id'], ['vocab.concept.concept_id'], name='fpk_procedure_occurrence_procedure_source_concept_id'),
+        ForeignKeyConstraint(['procedure_type_concept_id'], ['vocab.concept.concept_id'], name='fpk_procedure_occurrence_procedure_type_concept_id'),
+        ForeignKeyConstraint(['provider_id'], ['vocab.provider.provider_id'], name='fpk_procedure_occurrence_provider_id'),
+        ForeignKeyConstraint(['visit_detail_id'], ['vocab.visit_detail.visit_detail_id'], name='fpk_procedure_occurrence_visit_detail_id'),
+        ForeignKeyConstraint(['visit_occurrence_id'], ['vocab.visit_occurrence.visit_occurrence_id'], name='fpk_procedure_occurrence_visit_occurrence_id'),
         PrimaryKeyConstraint('procedure_occurrence_id', name='xpk_procedure_occurrence'),
         Index('idx_procedure_concept_id_1', 'procedure_concept_id'),
         Index('idx_procedure_person_id_1', 'person_id'),
         Index('idx_procedure_visit_id_1', 'visit_occurrence_id'),
-        
+        {'schema': 'vocab'}
     )
 
     procedure_occurrence_id: Mapped[int] = mapped_column(Integer, primary_key=True)
