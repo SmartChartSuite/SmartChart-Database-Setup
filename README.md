@@ -4,6 +4,8 @@
 
 For DDL based setup instructions, please see the `SETUP.md` file. For versioning, please see `VERSIONS.md`. For the list of Athena Vocabulary that is needed to build the OMOP Concept table, please see `ATHENA.md`.
 
+Note: To add the current project to the Python path temporarily if you run into module not found, use `export PYTHONPATH="$PYTHONPATH:$PWD"`.
+
 # Using the Database Build Script
 
 The Database Builder helps to manage SmartChart Suite databases, creating new schemas/tables to allow for easy expansion into new registries or environments. **Right now it is a work in progress and considered a pre-release state.**
