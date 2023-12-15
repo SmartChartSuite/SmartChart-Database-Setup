@@ -65,6 +65,11 @@ CQF Ruler will automatically build its own database so no action needs to be tak
 
 **TODO: Write up instructions.**
 
+# Loading Concepts and Other Data
+
+**TODO: Write up complete instructions.**
+Run each of the scripts in `scripts/postgres/concept_data`
+
 # Upgrading an Existing Database
 
 **TODO: Complete instructions and setup pattern.**
