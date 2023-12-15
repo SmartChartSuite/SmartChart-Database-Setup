@@ -16,6 +16,7 @@ The Database Builder helps to manage SmartChart Suite databases, creating new sc
 scripts may be required in the short term.
 * Needs additional handling for loading Athena Vocabulary and potentialy breaking down the models to speed up loading.
     * Note: Manually building the vocab schema and loading vocabulary from Athena CSVs prior to adding constraints will be much faster until this is resolved. Other schemas are not impacted by this.
+* Does not support loading registry specific concepts, viewer categories, and other custom data that must be loaded.
 
 ## Poetry
 
