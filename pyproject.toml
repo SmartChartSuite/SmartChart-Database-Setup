@@ -14,7 +14,7 @@ python = "^3.11"
 SQLAlchemy = "2.0.19"
 psycopg2-binary = "2.9.6"
 PyJWT = "2.8.0"
-python-multipart = "0.0.6"
+python-multipart = "0.0.18"
 sqlacodegen = "3.0.0rc3"
 
 [build-system]
